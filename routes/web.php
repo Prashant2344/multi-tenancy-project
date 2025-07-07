@@ -9,3 +9,7 @@ foreach (config('tenancy.central_domains') as $domain) {
         });
     });
 }
+
+Route::get('/debug-db', function () {
+    return \DB::connection()->getDatabaseName();
+});

@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Ensure the User model uses the tenant connection when tenancy is initialized.
+     */
+    public function getConnectionName()
+    {
+        return function_exists('tenant') && tenant() ? config('tenancy.database.tenant_connection') : $this->connection;
+    }
 }

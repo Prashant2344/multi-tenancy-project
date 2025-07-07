@@ -23,9 +23,34 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
+    // Register Fortify routes for authentication
+    // Fortify routes are registered automatically
+
+    // Redirect root to login if not authenticated, else to /home
     Route::get('/', function () {
-        dd(\App\Models\User::all());
-        return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
+        dd('ddddd');
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+        return redirect()->route('home');
+    });
+
+    // Home route: show all user details and tenant details
+    Route::middleware(['auth'])->get('/home', function () {
+        dd('dd');
+        $users = \App\Models\User::all();
+        $tenant = tenant();
+        return response()->json([
+            'users' => $users,
+            'tenant' => $tenant,
+        ]);
+    })->name('home');
+
+    // Protected routes for authenticated users
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/dashboard', function () {
+            return 'Welcome, ' . auth()->user()->name . '! You are in tenant ' . tenant('id');
+        });
     });
 });
 
