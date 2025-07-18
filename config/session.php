@@ -156,7 +156,8 @@ return [
     |
     */
 
-    'domain' => '.multi-tenancy-project.test',
+    'domain' => env('SESSION_DOMAIN', '.multi-tenancy-project.test'),
+
 
     /*
     |--------------------------------------------------------------------------

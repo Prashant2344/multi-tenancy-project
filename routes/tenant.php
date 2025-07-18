@@ -28,7 +28,6 @@ Route::middleware([
 
     // Redirect root to login if not authenticated, else to /home
     Route::get('/', function () {
-        dd('ddddd');
         if (!auth()->check()) {
             return redirect()->route('login');
         }

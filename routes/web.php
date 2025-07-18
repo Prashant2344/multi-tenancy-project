@@ -2,13 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
-foreach (config('tenancy.central_domains') as $domain) {
-    Route::domain($domain)->group(function () {
-        Route::get('/', function () {
-            return view('welcome');
-        });
-    });
-}
+// Central domain: Tenant CRUD routes
+Route::resource('tenants', App\Http\Controllers\TenantController::class);
+
+// Optionally, redirect the root to the tenants index
+Route::get('/', function () {
+    return redirect()->route('tenants.index');
+});
 
 Route::get('/debug-db', function () {
     return \DB::connection()->getDatabaseName();
