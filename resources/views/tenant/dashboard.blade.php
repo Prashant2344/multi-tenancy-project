@@ -76,6 +76,9 @@
             text-decoration: none;
             display: inline-block;
             margin-top: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: inherit;
         }
         .logout-btn:hover {
             background: #c82333;
@@ -122,7 +125,10 @@
             @endif
         </div>
 
-        <a href="{{ route('logout') }}" class="logout-btn">Logout</a>
+        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+            @csrf
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
     </div>
 </body>
 </html>
