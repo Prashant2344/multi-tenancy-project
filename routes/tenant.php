@@ -26,30 +26,48 @@ Route::middleware([
     // Register Fortify routes for authentication
     // Fortify routes are registered automatically
 
-    // Redirect root to login if not authenticated, else to /home
+    // Root route: show dashboard if authenticated, else redirect to login
     Route::get('/', function () {
-        if (!auth()->check()) {
-            return redirect()->route('login');
+        // Debug: log the current state
+        \Log::info('Tenant root route accessed', [
+            'tenant' => tenant('id'),
+            'authenticated' => auth()->check(),
+            'user' => auth()->user() ? auth()->user()->email : 'none'
+        ]);
+        
+        if (auth()->check()) {
+            // User is authenticated, show dashboard directly
+            $users = \App\Models\User::all();
+            $tenant = tenant();
+            
+            return view('tenant.dashboard', compact('users', 'tenant'));
         }
-        return redirect()->route('home');
+        
+        // User is not authenticated, redirect to login
+        return redirect('/login');
     });
 
-    // Home route: show all user details and tenant details
-    Route::middleware(['auth'])->get('/home', function () {
-        dd('dd');
+    // Dashboard route: main tenant dashboard (alias for root when authenticated)
+    Route::middleware(['auth'])->get('/dashboard', function () {
         $users = \App\Models\User::all();
         $tenant = tenant();
-        return response()->json([
-            'users' => $users,
-            'tenant' => $tenant,
-        ]);
-    })->name('home');
+        
+        return view('tenant.dashboard', compact('users', 'tenant'));
+    })->name('dashboard');
 
     // Protected routes for authenticated users
     Route::middleware(['auth'])->group(function () {
-        Route::get('/dashboard', function () {
-            return 'Welcome, ' . auth()->user()->name . '! You are in tenant ' . tenant('id');
-        });
+        Route::get('/profile', function () {
+            return 'Profile page for ' . auth()->user()->name . ' in tenant ' . tenant('id');
+        })->name('profile');
+        
+        Route::get('/users', function () {
+            $users = \App\Models\User::all();
+            return response()->json([
+                'users' => $users,
+                'tenant' => tenant(),
+            ]);
+        })->name('users');
     });
 });
 

@@ -43,7 +43,7 @@ class TenantController extends Controller
             'tenant_id' => $tenant->id,
         ]);
 
-        return redirect()->route('tenants.index')->with('success', 'Tenant created successfully.');
+        return redirect()->route('tenants.index')->with('success', 'Tenant created successfully with default admin user.');
     }
 
     // Show a single tenant

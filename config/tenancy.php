@@ -85,8 +85,6 @@ return [
      *
      * Each key in cache will have a tag applied on it. This tag is used to
      * scope the cache both when writing to it and when reading from it.
-     *
-     * You can clear cache selectively by specifying the tag.
      */
     'cache' => [
         'tag_base' => 'tenant', // This tag_base, followed by the tenant_id, will form a tag that will be applied on each cache call.
@@ -194,7 +192,7 @@ return [
      * Parameters used by the tenants:seed command.
      */
     'seeder_parameters' => [
-        '--class' => 'DatabaseSeeder', // root seeder class
+        '--class' => 'TenantDatabaseSeeder', // Use TenantDatabaseSeeder for tenant databases
         // '--force' => true, // This needs to be true to seed tenant databases in production
     ],
 ];
